@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}تعديل البيانات الشخصية - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-user-edit"></i> تعديل البيانات الشخصية</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- معلومات الحساب الأساسية -->
+                        <div class="col-md-12 mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">معلومات الحساب</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="first_name" class="form-label">الاسم الأول</label>
+                                        <input type="text" class="form-control" id="first_name" 
+                                               name="first_name" value="{{ user.first_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="last_name" class="form-label">الاسم الأخير</label>
+                                        <input type="text" class="form-control" id="last_name" 
+                                               name="last_name" value="{{ user.last_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">البريد الإلكتروني</label>
+                                        <input type="email" class="form-control" id="email" 
+                                               name="email" value="{{ user.email }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">اسم المستخدم</label>
+                                        <input type="text" class="form-control" id="username" 
+                                               value="{{ user.username }}" disabled>
+                                        <small class="text-muted">لا يمكن تغيير اسم المستخدم</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات الملف الشخصي -->
+                        <div class="col-md-12 mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">معلومات الملف الشخصي</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">رقم الهاتف</label>
+                                        <input type="text" class="form-control" id="phone" 
+                                               name="phone" value="{{ profile.phone }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="city" class="form-label">المدينة</label>
+                                        <select class="form-select" id="city" name="city">
+                                            <option value="">اختر المدينة</option>
+                                            {% for city in cities %}
+                                            <option value="{{ city.id }}" 
+                                                {% if profile.city and city.id == profile.city.id %}selected{% endif %}>
+                                                {{ city.name }} - {{ city.governorate }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">العنوان</label>
+                                        <textarea class="form-control" id="address" 
+                                                  name="address" rows="2">{{ profile.address }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="bio" class="form-label">السيرة الذاتية</label>
+                                        <textarea class="form-control" id="bio" 
+                                                  name="bio" rows="4">{{ profile.bio }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="profile_picture" class="form-label">صورة الملف الشخصي</label>
+                                        <input type="file" class="form-control" id="profile_picture" 
+                                               name="profile_picture" accept="image/*">
+                                        {% if profile.profile_picture %}
+                                        <div class="mt-2">
+                                            <small>الصورة الحالية:</small><br>
+                                            <img src="{{ profile.profile_picture.url }}" 
+                                                 alt="صورة الملف الشخصي" 
+                                                 style="max-width: 150px; max-height: 150px;" 
+                                                 class="img-thumbnail mt-1">
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات القراءة فقط -->
+                        <div class="col-md-12 mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">معلومات إضافية</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">نوع المستخدم</label>
+                                        <input type="text" class="form-control" 
+                                               value="{{ profile.get_user_type_display }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">حالة الحساب</label>
+                                        <input type="text" class="form-control" 
+                                               value="{% if profile.is_approved %}مفعل{% else %}قيد المراجعة{% endif %}" 
+                                               disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">تاريخ التسجيل</label>
+                                        <input type="text" class="form-control" 
+                                               value="{{ profile.created_at|date:'Y-m-d' }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ التغييرات
+                        </button>
+                        <a href="{% url 'user_profile' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> إلغاء
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

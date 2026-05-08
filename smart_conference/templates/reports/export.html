@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block title %}تصدير التقارير - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-file-export"></i> تصدير التقارير</h4>
+            </div>
+            <div class="card-body">
+                <!-- الإحصائيات السريعة -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h1 class="display-4 text-primary">{{ total_users }}</h1>
+                                <p class="card-text">إجمالي المستخدمين</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h1 class="display-4 text-success">{{ total_conferences }}</h1>
+                                <p class="card-text">إجمالي المؤتمرات</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h1 class="display-4 text-warning">{{ total_ratings }}</h1>
+                                <p class="card-text">إجمالي التقييمات</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- خيارات التصدير -->
+                <div class="row">
+                    <!-- تقرير المستخدمين -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-users"></i> تقرير المستخدمين</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="card-text">تصدير بيانات جميع المستخدمين في النظام</p>
+                                
+                                <div class="mt-4">
+                                    <h6>تنسيقات التصدير:</h6>
+                                    <div class="d-flex justify-content-center gap-2 mt-3">
+                                        <a href="{% url 'export_reports' %}?type=users&format=excel" 
+                                           class="btn btn-success">
+                                            <i class="fas fa-file-excel"></i> Excel
+                                        </a>
+                                        <a href="{% url 'export_reports' %}?type=users&format=csv" 
+                                           class="btn btn-info">
+                                            <i class="fas fa-file-csv"></i> CSV
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6>المعلومات المشمولة:</h6>
+                                    <ul class="list-unstyled text-start">
+                                        <li><i class="fas fa-check text-success"></i> بيانات الحساب</li>
+                                        <li><i class="fas fa-check text-success"></i> نوع المستخدم</li>
+                                        <li><i class="fas fa-check text-success"></i> حالة الحساب</li>
+                                        <li><i class="fas fa-check text-success"></i> معلومات الاتصال</li>
+                                        <li><i class="fas fa-check text-success"></i> تاريخ التسجيل</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- تقرير المؤتمرات -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> تقرير المؤتمرات</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="card-text">تصدير بيانات جميع المؤتمرات والمنظمين</p>
+                                
+                                <div class="mt-4">
+                                    <h6>تنسيقات التصدير:</h6>
+                                    <div class="d-flex justify-content-center gap-2 mt-3">
+                                        <a href="{% url 'export_reports' %}?type=conferences&format=excel" 
+                                           class="btn btn-success">
+                                            <i class="fas fa-file-excel"></i> Excel
+                                        </a>
+                                        <a href="{% url 'export_reports' %}?type=conferences&format=csv" 
+                                           class="btn btn-info">
+                                            <i class="fas fa-file-csv"></i> CSV
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6>المعلومات المشمولة:</h6>
+                                    <ul class="list-unstyled text-start">
+                                        <li><i class="fas fa-check text-success"></i> بيانات المؤتمر</li>
+                                        <li><i class="fas fa-check text-success"></i> معلومات المنظم</li>
+                                        <li><i class="fas fa-check text-success"></i> التواريخ والأوقات</li>
+                                        <li><i class="fas fa-check text-success"></i> الموقع والحالة</li>
+                                        <li><i class="fas fa-check text-success"></i> عدد المشاركين</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- تقرير التقييمات -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-warning text-white">
+                                <h5 class="mb-0"><i class="fas fa-star"></i> تقرير التقييمات</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="card-text">تصدير جميع التقييمات والتعليقات على المؤتمرات</p>
+                                
+                                <div class="mt-4">
+                                    <h6>تنسيقات التصدير:</h6>
+                                    <div class="d-flex justify-content-center gap-2 mt-3">
+                                        <a href="{% url 'export_reports' %}?type=ratings&format=excel" 
+                                           class="btn btn-success">
+                                            <i class="fas fa-file-excel"></i> Excel
+                                        </a>
+                                        <a href="{% url 'export_reports' %}?type=ratings&format=csv" 
+                                           class="btn btn-info">
+                                            <i class="fas fa-file-csv"></i> CSV
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6>المعلومات المشمولة:</h6>
+                                    <ul class="list-unstyled text-start">
+                                        <li><i class="fas fa-check text-success"></i> اسم المؤتمر</li>
+                                        <li><i class="fas fa-check text-success"></i> اسم المقيِّم</li>
+                                        <li><i class="fas fa-check text-success"></i> التقييم بالنجوم</li>
+                                        <li><i class="fas fa-check text-success"></i> التعليقات</li>
+                                        <li><i class="fas fa-check text-success"></i> تاريخ التقييم</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- جدول مقارنة -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-balance-scale"></i> مقارنة بين تنسيقات التصدير</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>الميزة</th>
+                                        <th class="text-center text-success">Excel (.xlsx)</th>
+                                        <th class="text-center text-info">CSV (.csv)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>حجم الملف</td>
+                                        <td class="text-center">أكبر</td>
+                                        <td class="text-center">أصغر</td>
+                                    </tr>
+                                    <tr>
+                                        <td>سرعة التحميل</td>
+                                        <td class="text-center">متوسطة</td>
+                                        <td class="text-center">سريعة</td>
+                                    </tr>
+                                    <tr>
+                                        <td>التنسيق والتصميم</td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i> مدعوم</td>
+                                        <td class="text-center"><i class="fas fa-times text-danger"></i> غير مدعوم</td>
+                                    </tr>
+                                    <tr>
+                                        <td>التوافق</td>
+                                        <td class="text-center">Microsoft Excel</td>
+                                        <td class="text-center">جميع البرامج</td>
+                                    </tr>
+                                    <tr>
+                                        <td>الرسوم البيانية</td>
+                                        <td class="text-center"><i class="fas fa-check text-success"></i> مدعومة</td>
+                                        <td class="text-center"><i class="fas fa-times text-danger"></i> غير مدعومة</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- إرشادات -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-question-circle"></i> إرشادات التصدير</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-lightbulb text-warning"></i> نصائح عامة:</h6>
+                                <ul>
+                                    <li>تأكد من حفظ الملف في مكان يسهل الوصول إليه</li>
+                                    <li>يفضل استخدام Excel للبيانات الكبيرة والمعقدة</li>
+                                    <li>استخدم CSV للبيانات البسيطة وللتحليل في برامج أخرى</li>
+                                    <li>يمكنك فتح ملف CSV في Excel إذا لزم الأمر</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-exclamation-triangle text-danger"></i> ملاحظات هامة:</h6>
+                                <ul>
+                                    <li>الملفات تحتوي على البيانات حتى لحظة التصدير</li>
+                                    <li>يمكن إعادة التصدير في أي وقت للحصول على أحدث البيانات</li>
+                                    <li>يجب توفر مساحة تخزين كافية على جهازك</li>
+                                    <li>الملفات تكون مشفرة بـ UTF-8 لدعم اللغة العربية</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // إضافة رسالة تأكيد قبل التصدير
+    $('.btn-success, .btn-info').on('click', function(e) {
+        var reportType = $(this).attr('href').includes('type=users') ? 'المستخدمين' : 
+                         $(this).attr('href').includes('type=conferences') ? 'المؤتمرات' : 'التقييمات';
+        
+        var formatType = $(this).hasClass('btn-success') ? 'Excel' : 'CSV';
+        
+        if(!confirm(`جاري تحضير تقرير ${reportType} بصيغة ${formatType}...\n\nسيبدأ التحميل تلقائياً خلال ثوانٍ`)) {
+            e.preventDefault();
+        }
+    });
+    
+    // إضافة مؤشر تحميل
+    $('.btn-success, .btn-info').on('click', function() {
+        $(this).html('<span class="spinner-border spinner-border-sm" role="status"></span> جاري التصدير...');
+        $(this).prop('disabled', true);
+    });
+});
+</script>
+{% endblock %}

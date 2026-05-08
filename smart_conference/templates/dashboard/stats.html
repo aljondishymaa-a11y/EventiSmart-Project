@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+
+{% block title %}الإحصائيات - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4"><i class="fas fa-chart-bar text-primary"></i> الإحصائيات الشاملة</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white shadow-sm h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title opacity-75">إجمالي المستخدمين</h6>
+                    <h2 class="mb-0 fw-bold">{{ total_stats.total_users }}</h2>
+                </div>
+                <i class="fas fa-users fa-3x opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow-sm h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title opacity-75">إجمالي المؤتمرات</h6>
+                    <h2 class="mb-0 fw-bold">{{ total_stats.total_conferences }}</h2>
+                </div>
+                <i class="fas fa-calendar-alt fa-3x opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white shadow-sm h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title opacity-75">إجمالي التقييمات</h6>
+                    <h2 class="mb-0 fw-bold">{{ total_stats.total_ratings }}</h2>
+                </div>
+                <i class="fas fa-star fa-3x opacity-25"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark shadow-sm h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title opacity-75">إجمالي الحضور</h6>
+                    <h2 class="mb-0 fw-bold">{{ total_stats.total_attendances }}</h2>
+                </div>
+                <i class="fas fa-user-check fa-3x opacity-25"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">توزيع المستخدمين</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>نوع المستخدم</th>
+                                <th>العدد</th>
+                                <th>النسبة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in user_stats %}
+                            <tr>
+                                <td>
+                                    {% if stat.user_type == 'admin' %}مدير النظام
+                                    {% elif stat.user_type == 'organizer' %}منظم
+                                    {% elif stat.user_type == 'speaker' %}متحدث
+                                    {% else %}مشارك{% endif %}
+                                </td>
+                                <td class="fw-bold">{{ stat.count }}</td>
+                                <td style="width: 45%;">
+                                    {% if total_stats.total_users > 0 %}
+                                        {% widthratio stat.count total_stats.total_users 100 as percentage %}
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress flex-grow-1" style="height: 6px;">
+                                                <div class="progress-bar bg-primary js-progress-bar" role="progressbar" data-width="{{ percentage }}"></div>
+                                            </div>
+                                            <span class="ms-2 small text-muted">{{ percentage }}%</span>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">مؤشرات الحضور</h5>
+            </div>
+            <div class="card-body d-flex flex-column justify-content-center">
+                <div class="row text-center mb-4">
+                    <div class="col-6 border-end">
+                        <h2 class="text-success fw-bold">{{ attendance_stats.attendance_rate }}%</h2>
+                        <p class="text-muted small mb-0 text-uppercase">نسبة الحضور</p>
+                    </div>
+                    <div class="col-6">
+                        <h2 class="text-dark fw-bold">{{ attendance_stats.total_attended }}</h2>
+                        <p class="text-muted small mb-0 text-uppercase">حاضر فعلي</p>
+                    </div>
+                </div>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-success js-progress-bar" role="progressbar" data-width="{{ attendance_stats.attendance_rate }}">الحضور</div>
+                    <div class="progress-bar bg-light text-dark border-start js-progress-diff" role="progressbar" data-diff="{{ attendance_stats.attendance_rate }}">الغياب</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">نمو المؤتمرات شهرياً ({% now "Y" %})</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyChartCanvas" height="150" data-json="{{ monthly_data_json }}"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">توزيع المستخدمين</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="usersChartCanvas" height="250" data-json="{{ user_data_json }}"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-file-export text-secondary me-2"></i> تصدير تقارير النظام</h5>
+                <span class="badge bg-light text-dark border">تنسيق Excel (.xlsx)</span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 text-center">
+                    <div class="col-md-4">
+                        <a href="{% url 'export_reports' %}?type=users" class="btn btn-outline-primary w-100 py-4 shadow-sm">
+                            <i class="fas fa-users-slash fa-2x mb-2"></i><br>
+                            <span class="fw-bold">تقرير المستخدمين</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'export_reports' %}?type=conferences" class="btn btn-outline-success w-100 py-4 shadow-sm">
+                            <i class="fas fa-file-invoice fa-2x mb-2"></i><br>
+                            <span class="fw-bold">تقرير المؤتمرات</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'export_reports' %}?type=ratings" class="btn btn-outline-info w-100 py-4 shadow-sm">
+                            <i class="fas fa-star-half-alt fa-2x mb-2"></i><br>
+                            <span class="fw-bold">تقرير التقييمات</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.addEventListener('load', function() {
+        // --- أولاً: معالجة أشرطة التقدم (Progress Bars) برمجياً لمنع أخطاء CSS ---
+        
+        // ضبط أشرطة التقدم العادية
+        document.querySelectorAll('.js-progress-bar').forEach(function(el) {
+            const width = el.getAttribute('data-width');
+            el.style.width = width + '%';
+        });
+
+        // ضبط شريط الغياب (100 - نسبة الحضور)
+        document.querySelectorAll('.js-progress-diff').forEach(function(el) {
+            const attendance = el.getAttribute('data-diff');
+            el.style.width = (100 - attendance) + '%';
+        });
+
+        // --- ثانياً: كود المخططات الحالي ---
+        
+        const monthlyCanvas = document.getElementById('monthlyChartCanvas');
+        if (monthlyCanvas && monthlyCanvas.dataset.json) {
+            try {
+                const rawData = JSON.parse(monthlyCanvas.dataset.json);
+                const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                const dataValues = new Array(12).fill(0);
+                rawData.forEach(item => { if(item.month) dataValues[item.month - 1] = item.count; });
+
+                new Chart(monthlyCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'المؤتمرات',
+                            data: dataValues,
+                            borderColor: '#198754',
+                            backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } } }
+                });
+            } catch (e) { console.error("Error parsing monthly JSON:", e); }
+        }
+
+        const usersCanvas = document.getElementById('usersChartCanvas');
+        if (usersCanvas && usersCanvas.dataset.json) {
+            try {
+                const rawData = JSON.parse(usersCanvas.dataset.json);
+                const typeNames = { 'admin': 'مدير', 'organizer': 'منظم', 'citizen': 'مواطن', 'speaker': 'متحدث', 'attendee': 'مشارك' };
+                const labels = rawData.map(d => typeNames[d.user_type] || d.user_type);
+                const counts = rawData.map(d => d.count);
+
+                new Chart(usersCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: counts,
+                            backgroundColor: ['#0d6efd', '#198754', '#0dcaf0', '#ffc107', '#dc3545']
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                });
+            } catch (e) { console.error("Error parsing users JSON:", e); }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}المؤتمرات - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-calendar-alt"></i> المؤتمرات المتاحة</h4>
+            </div>
+            <div class="card-body">
+                {% if conferences %}
+                <div class="row">
+                    {% for conference in conferences %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">{{ conference.title|truncatechars:50 }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ conference.description|truncatechars:100 }}</p>
+                                <p><i class="fas fa-map-marker-alt"></i> {{ conference.location }}</p>
+                                <p><i class="fas fa-calendar"></i> {{ conference.start_date|date:"Y-m-d" }}</p>
+                                <p><i class="fas fa-users"></i> {{ conference.current_attendees }}/{{ conference.max_attendees }}</p>
+                                
+                            </div>
+                          
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h4>لا توجد مؤتمرات متاحة حالياً</h4>
+                    <p class="text-muted">يرجى العودة لاحقاً</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

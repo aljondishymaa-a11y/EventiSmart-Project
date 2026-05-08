@@ -1,0 +1,114 @@
+[
+    {
+        "model": "conference.syriancity",
+        "pk": 1,
+        "fields": {
+            "name": "دمشق",
+            "governorate": "دمشق"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 2,
+        "fields": {
+            "name": "حلب",
+            "governorate": "حلب"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 3,
+        "fields": {
+            "name": "حمص",
+            "governorate": "حمص"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 4,
+        "fields": {
+            "name": "حماة",
+            "governorate": "حماة"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 5,
+        "fields": {
+            "name": "اللاذقية",
+            "governorate": "اللاذقية"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 6,
+        "fields": {
+            "name": "طرطوس",
+            "governorate": "طرطوس"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 7,
+        "fields": {
+            "name": "درعا",
+            "governorate": "درعا"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 8,
+        "fields": {
+            "name": "السويداء",
+            "governorate": "السويداء"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 9,
+        "fields": {
+            "name": "القنيطرة",
+            "governorate": "القنيطرة"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 10,
+        "fields": {
+            "name": "دير الزور",
+            "governorate": "دير الزور"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 11,
+        "fields": {
+            "name": "الحسكة",
+            "governorate": "الحسكة"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 12,
+        "fields": {
+            "name": "الرقة",
+            "governorate": "الرقة"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 13,
+        "fields": {
+            "name": "إدلب",
+            "governorate": "إدلب"
+        }
+    },
+    {
+        "model": "conference.syriancity",
+        "pk": 14,
+        "fields": {
+            "name": "ريف دمشق",
+            "governorate": "ريف دمشق"
+        }
+    }
+]

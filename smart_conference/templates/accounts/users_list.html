@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة المستخدمين - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-users-cog"></i> إدارة المستخدمين</h4>
+            </div>
+            <div class="card-body">
+                {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>اسم المستخدم</th>
+                                <th>الاسم الكامل</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>نوع المستخدم</th>
+                                <th>رقم الهاتف</th>
+                                <th>حالة الحساب</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_profile in users %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ user_profile.user.username }}</td>
+                                <td>{{ user_profile.user.get_full_name }}</td>
+                                <td>{{ user_profile.user.email }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if user_profile.user_type == 'admin' %}bg-danger
+                                        {% elif user_profile.user_type == 'organizer' %}bg-success
+                                        {% else %}bg-info{% endif %}">
+                                        {% if user_profile.user_type == 'admin' %}
+                                            مدير
+                                        {% elif user_profile.user_type == 'organizer' %}
+                                            منظم
+                                        {% elif user_profile.user_type == 'citizen' %}
+                                            مواطن
+                                        {% elif user_profile.user_type == 'speaker' %}
+                                            متحدث
+                                        {% elif user_profile.user_type == 'attendee' %}
+                                            مشارك
+                                        {% else %}
+                                            {{ user_profile.user_type }}
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>{{ user_profile.phone|default:"-" }}</td>
+                                <td>
+                                    {% if user_profile.is_approved %}
+                                    <span class="badge bg-success">مفعل</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">قيد المراجعة</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user_profile.created_at|date:"Y-m-d" }}</td>
+                                <td>
+                                    <form method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ user_profile.id }}">
+                                        {% if not user_profile.is_approved %}
+                                        <button type="submit" name="action" value="approve" class="btn btn-sm btn-success">
+                                            <i class="fas fa-check"></i> تفعيل
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-times"></i> تعطيل
+                                        </button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+                    <h4>لا توجد مستخدمين</h4>
+                    <p class="text-muted">لم يتم تسجيل أي مستخدمين بعد</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

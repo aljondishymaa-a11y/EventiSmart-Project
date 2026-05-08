@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}الملف الشخصي - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-user-circle"></i> الملف الشخصي</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="mb-3">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="صورة الملف الشخصي" 
+                                     class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+                            {% else %}
+                                <i class="fas fa-user-circle fa-5x text-muted"></i>
+                            {% endif %}
+                        </div>
+                        <h4>{{ profile.user.get_full_name|default:profile.user.username }}</h4>
+                        <p class="text-muted">{{ profile.user.email }}</p>
+                        <span class="badge bg-info">{{ profile.get_user_type_display }}</span>
+                        
+                        {% if profile.is_approved %}
+                            <span class="badge bg-success">مفعل</span>
+                        {% else %}
+                            <span class="badge bg-warning">قيد المراجعة</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>اسم المستخدم:</strong> {{ profile.user.username }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>رقم الهاتف:</strong> {{ profile.phone|default:"غير محدد" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>الاسم الكامل:</strong> {{ profile.user.get_full_name|default:"غير محدد" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>المدينة:</strong> {{ profile.city.name|default:"غير محدد" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>البريد الإلكتروني:</strong> {{ profile.user.email }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>تاريخ التسجيل:</strong> {{ profile.created_at|date:"Y-m-d" }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p><strong>العنوان:</strong> {{ profile.address|default:"غير محدد" }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p><strong>السيرة الذاتية:</strong></p>
+                                <p>{{ profile.bio|default:"لم يتم إضافة سيرة ذاتية" }}</p>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> تعديل البيانات
+                            </a>
+                            <a href="{% url 'change_password' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-key"></i> تغيير كلمة المرور
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- معلومات إضافية للمدير -->
+        {% if profile.user_type == 'admin' %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-shield-alt"></i> صلاحيات المدير</h5>
+            </div>
+            <div class="card-body">
+                <p>بصفتك مدير النظام، يمكنك:</p>
+                <ul>
+                    <li>إدارة جميع المستخدمين والحسابات</li>
+                    <li>مراجعة واعتماد المؤتمرات</li>
+                    <li>إدارة التصنيفات</li>
+                    <li>عرض الإحصائيات والتقارير</li>
+                    <li>تعديل إعدادات النظام</li>
+                </ul>
+                <a href="{% url 'dashboard' %}" class="btn btn-success">
+                    <i class="fas fa-tachometer-alt"></i> الانتقال إلى لوحة التحكم
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

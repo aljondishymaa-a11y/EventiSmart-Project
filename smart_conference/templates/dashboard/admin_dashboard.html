@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}لوحة تحكم المدير - منصة المؤتمرات الذكية{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4"><i class="fas fa-tachometer-alt"></i> لوحة تحكم المدير</h1>
+    </div>
+</div>
+
+<!-- الإحصائيات -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">إجمالي المستخدمين</h6>
+                        <h2>{{ stats.total_users }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">المؤتمرات النشطة</h6>
+                        <h2>{{ stats.active_conferences }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-calendar-check fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">الطلبات المعلقة</h6>
+                        <h2>{{ stats.pending_requests }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">التقييمات</h6>
+                        <h2>{{ stats.total_ratings }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-star fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- آخر المؤتمرات -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-calendar"></i> آخر المؤتمرات</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for conference in recent_conferences|slice:":5" %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ conference.title|truncatechars:50 }}</h6>
+                            <small>{{ conference.start_date|date:"Y-m-d" }}</small>
+                        </div>
+                        <small>
+                            <span class="badge bg-{% if conference.status == 'approved' %}success{% elif conference.status == 'pending' %}warning{% else %}secondary{% endif %}">
+                                {{ conference.get_status_display }}
+                            </span>
+                        </small>
+                    </a>
+                    {% empty %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">لا توجد مؤتمرات</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- آخر المستخدمين -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user-plus"></i> آخر المستخدمين المسجلين</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for user in recent_users|slice:":5" %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ user.user.get_full_name|default:user.user.username }}</h6>
+                            <small>{{ user.created_at|date:"Y-m-d" }}</small>
+                        </div>
+                        <small>
+                            <span class="badge bg-info">{{ user.get_user_type_display }}</span>
+                            {% if user.is_approved %}
+                            <span class="badge bg-success">مفعل</span>
+                            {% else %}
+                            <span class="badge bg-warning">قيد المراجعة</span>
+                            {% endif %}
+                        </small>
+                    </a>
+                    {% empty %}
+                    <div class="text-center py-3">
+                        <p class="text-muted">لا توجد مستخدمين</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
